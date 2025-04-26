@@ -16,6 +16,7 @@ signal pipe_in_progress
 signal line_changed(line: String)
 signal binded_success(line: String)
 signal binded_failure
+signal thread_cleaned
 
 func run(path: String, args: PackedStringArray) -> void:
 	OS.execute(_modify_path(path), args)
@@ -69,7 +70,7 @@ func _thread_func() -> void:
 			pipe_in_progress.emit.call_deferred(line)
 			line_changed.emit(line)
 			if _binded_fn.bind(line).call():
-				binded_success.emit(line)
+				binded_success.emit.call_deferred(line)
 		else:
 			line=stderr.get_line()
 			if line!="":
@@ -77,10 +78,11 @@ func _thread_func() -> void:
 			else:
 				break
 	pipe_in_progress.emit.call_deferred(null)
-	binded_failure.emit()
+	binded_failure.emit.call_deferred()
 
 func clean_thread() -> void:
-	if thread.is_alive():
+	if !thread.is_alive() and thread.is_started():
 		thread.wait_to_finish()
 	pipe.close()
 	OS.kill(pid)
+	thread_cleaned.emit.call_deferred()

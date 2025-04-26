@@ -17,13 +17,14 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Singleton="*res://globals/singleton.gd"
-P2P="*res://globals/p2p.gd"
+Singleton="*res://autoload/singleton.gd"
+P2P="*res://autoload/p2p.gd"
+AirplayCheck="*res://autoload/airplay_check.gd"
 
 [file_customization]
 
 folder_colors={
-"res://globals/": "teal",
+"res://autoload/": "teal",
 "res://meta/": "orange",
 "res://scenes/": "blue",
 "res://util/": "purple"

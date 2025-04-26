@@ -62,10 +62,12 @@ custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vxm7e")
 
 [node name="UserIcon" type="TextureRect" parent="HBoxContainer/SideBar/MarginContainer/VBoxContainer/UserProfileBG/UserPFPCrop"]
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("1_bx40e")
 expand_mode = 1
 
