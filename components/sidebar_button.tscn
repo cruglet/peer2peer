@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=3 uid="uid://cikkmyxmggyls"]
+
+[ext_resource type="Script" uid="uid://ccg7y6jpc0dyn" path="res://components/sidebar_button.gd" id="1_43nyf"]
+[ext_resource type="Texture2D" uid="uid://dg3h82vfruc2h" path="res://meta/icons/open.svg" id="2_43nyf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vxm7e"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 9999
+corner_radius_top_right = 9999
+corner_radius_bottom_right = 9999
+corner_radius_bottom_left = 9999
+
+[node name="SidebarButton" type="PanelContainer"]
+self_modulate = Color(0.180392, 0.203922, 0.235294, 1)
+custom_minimum_size = Vector2(100, 100)
+offset_right = 100.0
+offset_bottom = 100.0
+pivot_offset = Vector2(50, 50)
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vxm7e")
+script = ExtResource("1_43nyf")
+texture = ExtResource("2_43nyf")
+clipping = false
+
+[node name="SidebarButtonCrop" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vxm7e")
+
+[node name="SidebarButtonIcon" type="TextureRect" parent="SidebarButtonCrop"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_43nyf")
+expand_mode = 1
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="resized" from="." to="." method="_on_resized"]

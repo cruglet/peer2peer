@@ -1,22 +1,55 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqq4vpj3tbtj4"]
+[gd_scene load_steps=18 format=3 uid="uid://bqq4vpj3tbtj4"]
 
 [ext_resource type="Texture2D" uid="uid://b0nx2mo3k2reg" path="res://meta/icons/default_user_icon.svg" id="1_bx40e"]
 [ext_resource type="Script" uid="uid://y2p083eetr0p" path="res://scenes/main_menu/home.gd" id="1_vxm7e"]
+[ext_resource type="Texture2D" uid="uid://bck2h1i4xdaga" path="res://meta/icons/friends.svg" id="3_oaibl"]
+[ext_resource type="PackedScene" uid="uid://cikkmyxmggyls" path="res://components/sidebar_button.tscn" id="3_pkvgr"]
+[ext_resource type="Theme" uid="uid://cb3koaxnpyonm" path="res://meta/themes/primary.theme" id="5_m3gy1"]
+[ext_resource type="Script" uid="uid://8hd5rtifur2p" path="res://scenes/main_menu/broadcast/toggle_visibility.gd" id="5_oaibl"]
+[ext_resource type="Texture2D" uid="uid://5frmublhiiwu" path="res://meta/icons/edit_icon.svg" id="6_jfa57"]
+[ext_resource type="Script" uid="uid://d4ne311g8hjpb" path="res://scenes/main_menu/profile/toggle_profile_view.gd" id="9_w0a1o"]
+[ext_resource type="Script" uid="uid://phngbo816smb" path="res://scenes/main_menu/profile/profile_updater.gd" id="10_e3h42"]
+[ext_resource type="Script" uid="uid://b4uiyi81sglqn" path="res://scenes/main_menu/profile/profile_editor.gd" id="10_i4q3t"]
+[ext_resource type="Script" uid="uid://b6283kiacj7wm" path="res://scenes/main_menu/listen/user_login.gd" id="11_i4q3t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jx8ff"]
 bg_color = Color(0.121569, 0.133333, 0.152941, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vxm7e"]
-bg_color = Color(0.180392, 0.203922, 0.235294, 1)
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_vxm7e"]
+color = Color(0.180392, 0.2, 0.227451, 1)
+grow_begin = -10.0
+grow_end = -10.0
+thickness = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bx40e"]
+bg_color = Color(0.180392, 0.2, 0.227451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m3gy1"]
+bg_color = Color(0.27451, 0.27451, 0.270588, 1)
 corner_radius_top_left = 9999
 corner_radius_top_right = 9999
 corner_radius_bottom_right = 9999
 corner_radius_bottom_left = 9999
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bx40e"]
-bg_color = Color(0.180392, 0.2, 0.227451, 1)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rury3"]
 
-[node name="Home" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e3h42"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.246889, 0.246889, 0.24365, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.39, 0.39, 0.3861, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="Home" type="Control" node_paths=PackedStringArray("user_profile_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,8 +57,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vxm7e")
+user_profile_button = NodePath("PrimaryContainer/SideBar/MarginContainer/VBoxContainer/UserProfileButton")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="PrimaryContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,45 +68,220 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="SideBar" type="PanelContainer" parent="HBoxContainer"]
-custom_minimum_size = Vector2(80, 0)
+[node name="SideBar" type="PanelContainer" parent="PrimaryContainer"]
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jx8ff")
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/SideBar"]
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryContainer/SideBar"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_bottom = 25
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/SideBar/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PrimaryContainer/SideBar/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="Control" type="Control" parent="HBoxContainer/SideBar/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="PrimaryContainer/SideBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 
-[node name="UserProfileBG" type="PanelContainer" parent="HBoxContainer/SideBar/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(50, 50)
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryContainer/SideBar/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_vxm7e")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_top = 40
 
-[node name="UserPFPCrop" type="PanelContainer" parent="HBoxContainer/SideBar/MarginContainer/VBoxContainer/UserProfileBG"]
-clip_children = 2
-custom_minimum_size = Vector2(42, 42)
+[node name="OnlineUsersVBox" type="VBoxContainer" parent="PrimaryContainer/SideBar/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vxm7e")
+theme_override_constants/separation = 20
 
-[node name="UserIcon" type="TextureRect" parent="HBoxContainer/SideBar/MarginContainer/VBoxContainer/UserProfileBG/UserPFPCrop"]
+[node name="HSeparator" type="HSeparator" parent="PrimaryContainer/SideBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 2
+theme_override_constants/separation = 40
+theme_override_styles/separator = SubResource("StyleBoxLine_vxm7e")
+
+[node name="DiscoveryToggle" parent="PrimaryContainer/SideBar/MarginContainer/VBoxContainer" instance=ExtResource("3_pkvgr")]
+layout_mode = 2
+texture = ExtResource("3_oaibl")
+
+[node name="UserProfileButton" parent="PrimaryContainer/SideBar/MarginContainer/VBoxContainer" instance=ExtResource("3_pkvgr")]
+layout_mode = 2
 texture = ExtResource("1_bx40e")
-expand_mode = 1
+hover_icon_color = Color(1, 1, 1, 1)
+clipping = true
+icon_scale = 1.8
 
-[node name="MainContent" type="PanelContainer" parent="HBoxContainer"]
+[node name="MainContent" type="PanelContainer" parent="PrimaryContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_bx40e")
+
+[node name="ProfileView" type="MarginContainer" parent="PrimaryContainer/MainContent"]
+layout_mode = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PrimaryContainer/MainContent/ProfileView"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="YourProfile" type="Label" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("5_m3gy1")
+theme_override_font_sizes/font_size = 80
+text = "Your Profile"
+
+[node name="PeerInfoHBox" type="HBoxContainer" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="UserProfileBG" type="PanelContainer" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_m3gy1")
+
+[node name="UserPFPCrop" type="PanelContainer" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG"]
+clip_children = 2
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m3gy1")
+
+[node name="UserIcon" type="TextureRect" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop"]
+layout_mode = 2
+texture = ExtResource("1_bx40e")
+expand_mode = 1
+
+[node name="UserIconButton" type="Button" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop/UserIcon"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox"]
+layout_mode = 2
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="UsernameEditContainer" type="HBoxContainer" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="UsernameEdit" type="LineEdit" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer/UsernameEditContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("5_m3gy1")
+theme_override_font_sizes/font_size = 60
+theme_override_styles/focus = SubResource("StyleBoxEmpty_rury3")
+text = "Peer"
+max_length = 30
+expand_to_text_length = true
+flat = true
+
+[node name="EditIcon" type="TextureRect" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer/UsernameEditContainer/UsernameEdit"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 1.0
+offset_top = -16.0
+offset_right = 51.0
+offset_bottom = 16.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("6_jfa57")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="UserID" type="Label" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.392157)
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("5_m3gy1")
+theme_override_font_sizes/font_size = 25
+text = "#100000000"
+
+[node name="AboutText" type="TextEdit" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer"]
+custom_minimum_size = Vector2(800, 150)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 35
+theme_override_styles/normal = SubResource("StyleBoxFlat_e3h42")
+text = "Hi! I'm a new peer!"
+
+[node name="SaveChangesButton" type="Button" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer"]
+custom_minimum_size = Vector2(250, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("5_m3gy1")
+theme_override_font_sizes/font_size = 30
+disabled = true
+text = "Save Changes"
+
+[node name="UserPFPDialog" type="FileDialog" parent="PrimaryContainer/MainContent/ProfileView"]
+auto_translate_mode = 1
+title = "Open a File"
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png", "*.jpg", "*.svg")
+use_native_dialog = true
+
+[node name="Profile" type="Node" parent="."]
+
+[node name="ToggleProfileView" type="Node" parent="Profile" node_paths=PackedStringArray("profile_button", "profile_view_container")]
+script = ExtResource("9_w0a1o")
+profile_button = NodePath("../../PrimaryContainer/SideBar/MarginContainer/VBoxContainer/UserProfileButton")
+profile_view_container = NodePath("../../PrimaryContainer/MainContent/ProfileView")
+
+[node name="ProfileUpdater" type="Node" parent="Profile" node_paths=PackedStringArray("profile_view_username", "profile_view_user_id", "profile_view_image", "profile_view_about")]
+script = ExtResource("10_e3h42")
+profile_view_username = NodePath("../../PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer/UsernameEditContainer/UsernameEdit")
+profile_view_user_id = NodePath("../../PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer/UserID")
+profile_view_image = NodePath("../../PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop/UserIcon")
+profile_view_about = NodePath("../../PrimaryContainer/MainContent/ProfileView/VBoxContainer/AboutText")
+
+[node name="ProfileEditor" type="Node" parent="Profile" node_paths=PackedStringArray("about_edit", "username_edit", "pfp_edit", "save_button", "pfp_dialog", "sidebar_profile_button")]
+script = ExtResource("10_i4q3t")
+about_edit = NodePath("../../PrimaryContainer/MainContent/ProfileView/VBoxContainer/AboutText")
+username_edit = NodePath("../../PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer/UsernameEditContainer/UsernameEdit")
+pfp_edit = NodePath("../../PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop/UserIcon")
+save_button = NodePath("../../PrimaryContainer/MainContent/ProfileView/VBoxContainer/SaveChangesButton")
+pfp_dialog = NodePath("../../PrimaryContainer/MainContent/ProfileView/UserPFPDialog")
+sidebar_profile_button = NodePath("../../PrimaryContainer/SideBar/MarginContainer/VBoxContainer/UserProfileButton")
+
+[node name="Broadcast" type="Node" parent="."]
+
+[node name="ToggleVisibility" type="Node" parent="Broadcast" node_paths=PackedStringArray("discovery_toggle")]
+script = ExtResource("5_oaibl")
+discovery_toggle = NodePath("../../PrimaryContainer/SideBar/MarginContainer/VBoxContainer/DiscoveryToggle")
+
+[node name="Listen" type="Node" parent="."]
+
+[node name="UserLogin" type="Node" parent="Listen" node_paths=PackedStringArray("online_users_container")]
+script = ExtResource("11_i4q3t")
+online_users_container = NodePath("../../PrimaryContainer/SideBar/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OnlineUsersVBox")
+
+[connection signal="pressed" from="PrimaryContainer/SideBar/MarginContainer/VBoxContainer/DiscoveryToggle" to="Broadcast/ToggleVisibility" method="_on_discovery_toggle_pressed"]
+[connection signal="pressed" from="PrimaryContainer/SideBar/MarginContainer/VBoxContainer/UserProfileButton" to="Profile/ToggleProfileView" method="_on_profile_view_pressed"]
+[connection signal="pressed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop/UserIcon/UserIconButton" to="Profile/ProfileEditor" method="_on_user_icon_button_pressed"]
+[connection signal="text_changed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer/UsernameEditContainer/UsernameEdit" to="Profile/ProfileEditor" method="_on_profile_changed"]
+[connection signal="text_changed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/AboutText" to="Profile/ProfileEditor" method="_on_profile_changed"]
+[connection signal="pressed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/SaveChangesButton" to="Profile/ProfileEditor" method="_on_save_changes_button_pressed"]
+[connection signal="file_selected" from="PrimaryContainer/MainContent/ProfileView/UserPFPDialog" to="Profile/ProfileEditor" method="_on_user_pfp_dialog_file_selected"]

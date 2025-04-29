@@ -13,6 +13,7 @@ config_version=5
 config/name="Peer2Peer"
 run/main_scene="uid://bqq4vpj3tbtj4"
 config/features=PackedStringArray("4.4", "GL Compatibility")
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [autoload]
@@ -21,14 +22,24 @@ Singleton="*res://autoload/singleton.gd"
 P2P="*res://autoload/p2p.gd"
 AirplayCheck="*res://autoload/airplay_check.gd"
 
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+
 [file_customization]
 
 folder_colors={
 "res://autoload/": "teal",
-"res://meta/": "orange",
+"res://components/": "orange",
+"res://meta/": "yellow",
 "res://scenes/": "blue",
 "res://util/": "purple"
 }
+
+[gui]
+
+theme/custom_font="uid://f5ls2h02l2tm"
 
 [rendering]
 
