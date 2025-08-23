@@ -24,22 +24,17 @@ func _on_save_changes_button_pressed() -> void:
 	
 	UserData.store()
 	
-	sidebar_profile_button.texture = UserData.fetch_profile_picture()
+	sidebar_profile_button.sidebar_button_icon.self_modulate = pfp_edit.self_modulate
+	sidebar_profile_button.idle_icon_color = pfp_edit.self_modulate
+	sidebar_profile_button.hover_icon_color = pfp_edit.self_modulate
 	save_button.disabled = true
-
 
 
 func _on_profile_changed(__ = null) -> void:
 	save_button.disabled = false
 
-
-func _on_user_icon_button_pressed() -> void:
-	pfp_dialog.show()
-
-
-func _on_user_pfp_dialog_file_selected(path: String) -> void:
-	var pfp_img: Image = Image.load_from_file(path)
-	pfp_edit.texture = ImageTexture.create_from_image(pfp_img)
-	pfp_edit.self_modulate = Color.WHITE
-	pfp_path = path
+func _on_user_color_button_color_changed(color: Color) -> void:
+	var user_color: Color = color
+	user_color.v = lerpf(0.8, 1, user_color.v)
+	pfp_edit.self_modulate = user_color
 	save_button.disabled = false

@@ -45,7 +45,7 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
-[node name="Login" type="PanelContainer" node_paths=PackedStringArray("username_edit", "user_icon", "user_id", "about_edit", "user_pfp_dialog")]
+[node name="Login" type="PanelContainer" node_paths=PackedStringArray("username_edit", "user_icon", "user_id", "about_edit", "user_pfp_dialog", "http")]
 custom_minimum_size = Vector2(200, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -60,6 +60,7 @@ user_icon = NodePath("MarginContainer/VBoxContainer/UserCustomizePanel/VBoxConta
 user_id = NodePath("MarginContainer/VBoxContainer/UserCustomizePanel/VBoxContainer/UserID")
 about_edit = NodePath("MarginContainer/VBoxContainer/UserCustomizePanel/VBoxContainer/AboutEdit")
 user_pfp_dialog = NodePath("UserPFPDialog")
+http = NodePath("HTTPRequest")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -110,15 +111,18 @@ layout_mode = 2
 texture = ExtResource("2_1qgm1")
 expand_mode = 1
 
-[node name="UserIconButton" type="Button" parent="MarginContainer/VBoxContainer/UserCustomizePanel/VBoxContainer/UserProfileBG/UserPFPCrop/UserIcon"]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_default_cursor_shape = 2
+[node name="PFPURLChanged" type="LineEdit" parent="MarginContainer/VBoxContainer/UserCustomizePanel/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_d7qrr")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_0msd8")
+placeholder_text = "URL"
+alignment = 1
+max_length = 200
+flat = true
 
 [node name="UsernameEditContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/UserCustomizePanel/VBoxContainer"]
 layout_mode = 2
@@ -194,6 +198,8 @@ access = 2
 filters = PackedStringArray("*.png", "*.jpg", "*.svg")
 use_native_dialog = true
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/UserCustomizePanel/VBoxContainer/UserProfileBG/UserPFPCrop/UserIcon/UserIconButton" to="." method="_on_user_icon_button_pressed"]
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/UserCustomizePanel/VBoxContainer/PFPURLChanged" to="." method="_on_pfpurl_changed_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/CreateProfileButton" to="." method="_on_create_profile_button_pressed"]
 [connection signal="file_selected" from="UserPFPDialog" to="." method="_on_user_pfp_dialog_file_selected"]

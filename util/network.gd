@@ -1,9 +1,9 @@
 class_name Network extends Node
 
-
 static var port: int = 49132
 static var peer: PacketPeerUDP = PacketPeerUDP.new()
 const IPV4_RGX: String = r"^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}$"
+
 
 static func get_v4_addresses() -> PackedStringArray:
 	var regex: RegEx = RegEx.new()
@@ -25,9 +25,8 @@ static func broadcast_local(data: PackedByteArray, ip: String = "") -> void:
 		peer.set_dest_address(ip, port)
 		peer.put_packet(data)
 	else:
-		for address: String in get_v4_addresses():
-			peer.set_dest_address(_broaden_ip(address, 3), port)
-			peer.put_packet(data)
+		peer.set_dest_address(Network.get_broadcast_ip(), port)
+		peer.put_packet(data)
 			
 static func _broaden_ip(ip: String, levels: int) -> String:
 	var l: int = levels
@@ -42,3 +41,9 @@ static func _broaden_ip(ip: String, levels: int) -> String:
 		broadened_ip += "." + segments[i]
 	
 	return broadened_ip
+
+
+static func get_broadcast_ip() -> String:
+	var output: Array
+	OS.execute("sh", ["-c", "ifconfig | grep 'inet ' | grep broadcast"], output)
+	return output[0].replace("\n", "").split("broadcast ")[1]

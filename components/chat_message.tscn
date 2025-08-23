@@ -1,0 +1,115 @@
+[gd_scene load_steps=6 format=3 uid="uid://bjaxlejtikhvk"]
+
+[ext_resource type="Script" uid="uid://b4b1myts8dtee" path="res://components/chat_message.gd" id="1_j21d3"]
+[ext_resource type="Theme" uid="uid://cb3koaxnpyonm" path="res://meta/themes/primary.theme" id="1_wq60c"]
+[ext_resource type="Texture2D" uid="uid://b0nx2mo3k2reg" path="res://meta/icons/default_user_icon.svg" id="2_rcdwj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u7dub"]
+bg_color = Color(0.27451, 0.27451, 0.270588, 1)
+corner_radius_top_left = 9999
+corner_radius_top_right = 9999
+corner_radius_bottom_right = 9999
+corner_radius_bottom_left = 9999
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rcdwj"]
+content_margin_top = 7.0
+
+[node name="ChatMessage" type="Control" node_paths=PackedStringArray("username_label", "message_label", "time_label", "user_icon", "sequential_message_label", "sequential_time_label", "primary_container", "sequential_container")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_j21d3")
+username_label = NodePath("PrimaryMessage/VBoxContainer/HBoxContainer/UsernameLabel")
+message_label = NodePath("PrimaryMessage/VBoxContainer/MessageLabel")
+time_label = NodePath("PrimaryMessage/VBoxContainer/HBoxContainer/TimeLabel")
+user_icon = NodePath("PrimaryMessage/UserPFPCrop/UserIcon")
+sequential_message_label = NodePath("SequentialMessage/MessageLabel")
+sequential_time_label = NodePath("SequentialMessage/TimeLabel")
+primary_container = NodePath("PrimaryMessage")
+sequential_container = NodePath("SequentialMessage")
+
+[node name="PrimaryMessage" type="HBoxContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="UserPFPCrop" type="PanelContainer" parent="PrimaryMessage"]
+clip_children = 1
+custom_minimum_size = Vector2(120, 82)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u7dub")
+
+[node name="UserIcon" type="TextureRect" parent="PrimaryMessage/UserPFPCrop"]
+layout_mode = 2
+texture = ExtResource("2_rcdwj")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PrimaryMessage"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PrimaryMessage/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="UsernameLabel" type="Label" parent="PrimaryMessage/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_wq60c")
+theme_override_font_sizes/font_size = 40
+text = "user"
+
+[node name="TimeLabel" type="Label" parent="PrimaryMessage/VBoxContainer/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.392157)
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_wq60c")
+theme_override_font_sizes/font_size = 24
+text = "01:04"
+vertical_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="PrimaryMessage/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_wq60c")
+theme_override_font_sizes/font_size = 28
+text = "message"
+
+[node name="SequentialMessage" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 63.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="TimeLabel" type="Label" parent="SequentialMessage"]
+self_modulate = Color(1, 1, 1, 0.392157)
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_wq60c")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_rcdwj")
+text = "05:15"
+horizontal_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="SequentialMessage"]
+custom_minimum_size = Vector2(400, 55)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_wq60c")
+theme_override_font_sizes/font_size = 28
+text = "message"
+autowrap_mode = 2

@@ -5,20 +5,18 @@ extends PanelContainer
 @export var user_id: Label
 @export var about_edit: TextEdit
 @export var user_pfp_dialog: FileDialog
+@export var http: HTTPRequest
 
 var pfp_path: String
 
 func _ready() -> void:
-	var hue: float = randf_range(0.2, 0.5)
-	var sat: float = randf_range(0, 1)
+	var hue: float = randf_range(0, 1)
+	var sat: float = randf_range(0.3, 0.8)
 	user_icon.self_modulate = Color.from_hsv(hue, sat, 1.0)
 	user_id.text = "#%s" % generate_id()
 	
 func generate_id() -> int:
 	return randi_range(100000000, 999999999)
-
-func _on_user_icon_button_pressed() -> void:
-	user_pfp_dialog.show()
 
 
 func _on_user_pfp_dialog_file_selected(path: String) -> void:
@@ -42,3 +40,10 @@ func _on_create_profile_button_pressed() -> void:
 	
 	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://scenes/main_menu/home.tscn")
+
+ 
+func _on_pfpurl_changed_text_changed(new_text: String) -> void:
+	if "http" not in new_text:
+		return
+	
+	http.request(new_text)

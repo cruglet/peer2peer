@@ -11,7 +11,7 @@ func _ready() -> void:
 	await owner.ready
 	_on_discovery_toggle_pressed()
 
-func _on_discovery_toggle_pressed() -> void:
+func _on_discovery_toggle_pressed(_a = null) -> void:
 	open = !open
 	
 	if open:

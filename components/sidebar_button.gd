@@ -34,7 +34,7 @@ var scale_tween: Tween
 var press_timer: Timer = Timer.new()
 
 
-signal pressed
+signal pressed(source: SidebarButton)
 
 
 func _ready() -> void:
@@ -106,7 +106,7 @@ func _on_released() -> void:
 	scale_tween.play()
 	
 	if press_timer.time_left > 0:
-		pressed.emit()
+		pressed.emit(self)
 
 func _on_resized() -> void:
 	pivot_offset = size / 2

@@ -15,7 +15,6 @@ func _ready() -> void:
 
 
 func load_user() -> void:
-	user_profile_button.texture = load_pfp(UserData.user.profile_picture_data)
 	user_profile_button.idle_icon_color = UserData.user.modulate_pfp
 	user_profile_button.hover_icon_color = UserData.user.modulate_pfp
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bqq4vpj3tbtj4"]
+[gd_scene load_steps=23 format=3 uid="uid://bqq4vpj3tbtj4"]
 
 [ext_resource type="Texture2D" uid="uid://b0nx2mo3k2reg" path="res://meta/icons/default_user_icon.svg" id="1_bx40e"]
 [ext_resource type="Script" uid="uid://y2p083eetr0p" path="res://scenes/main_menu/home.gd" id="1_vxm7e"]
@@ -11,6 +11,10 @@
 [ext_resource type="Script" uid="uid://phngbo816smb" path="res://scenes/main_menu/profile/profile_updater.gd" id="10_e3h42"]
 [ext_resource type="Script" uid="uid://b4uiyi81sglqn" path="res://scenes/main_menu/profile/profile_editor.gd" id="10_i4q3t"]
 [ext_resource type="Script" uid="uid://b6283kiacj7wm" path="res://scenes/main_menu/listen/user_login.gd" id="11_i4q3t"]
+[ext_resource type="Script" uid="uid://c8dfjn4lc42m0" path="res://scenes/main_menu/content/chat_view.gd" id="12_4ev0o"]
+[ext_resource type="Script" uid="uid://bci45147bjmrd" path="res://scenes/main_menu/listen/receive_message.gd" id="12_aa2bv"]
+[ext_resource type="Script" uid="uid://bcrygyoundkk8" path="res://scenes/main_menu/content/load_chat_messages.gd" id="13_gcbj6"]
+[ext_resource type="Script" uid="uid://dtp7l5jds827q" path="res://scenes/main_menu/content/send_message.gd" id="15_aa2bv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jx8ff"]
 bg_color = Color(0.121569, 0.133333, 0.152941, 1)
@@ -48,6 +52,16 @@ corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gcbj6"]
+content_margin_left = 20.0
+content_margin_top = 30.0
+content_margin_right = 20.0
+bg_color = Color(0.232638, 0.256239, 0.289283, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Home" type="Control" node_paths=PackedStringArray("user_profile_button")]
 layout_mode = 3
@@ -120,6 +134,7 @@ size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_bx40e")
 
 [node name="ProfileView" type="MarginContainer" parent="PrimaryContainer/MainContent"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 60
 theme_override_constants/margin_top = 60
@@ -158,7 +173,7 @@ layout_mode = 2
 texture = ExtResource("1_bx40e")
 expand_mode = 1
 
-[node name="UserIconButton" type="Button" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop/UserIcon"]
+[node name="UserColorButton" type="ColorPickerButton" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop/UserIcon"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -167,6 +182,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_default_cursor_shape = 2
+edit_alpha = false
 
 [node name="MarginContainer" type="MarginContainer" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox"]
 layout_mode = 2
@@ -194,7 +210,7 @@ flat = true
 [node name="EditIcon" type="TextureRect" parent="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer/UsernameEditContainer/UsernameEdit"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 1
-anchors_preset = 6
+anchors_preset = -1
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -243,12 +259,84 @@ access = 2
 filters = PackedStringArray("*.png", "*.jpg", "*.svg")
 use_native_dialog = true
 
+[node name="ChatView" type="MarginContainer" parent="PrimaryContainer/MainContent"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PrimaryContainer/MainContent/ChatView"]
+layout_mode = 2
+
+[node name="HeaderPanelContainer" type="PanelContainer" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("5_m3gy1")
+theme_override_styles/panel = SubResource("StyleBoxFlat_jx8ff")
+
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer/HeaderPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer/HeaderPanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ChatUsernameLabel" type="Label" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer/HeaderPanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "username"
+
+[node name="ChatUserIDLabel" type="Label" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer/HeaderPanelContainer/MarginContainer/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.392157)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "#01111"
+
+[node name="MainChatScroller" type="ScrollContainer" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer/MainChatScroller"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 20
+
+[node name="ChatVBox" type="VBoxContainer" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer/MainChatScroller/MarginContainer"]
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="InputChatHBox" type="HBoxContainer" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer/InputChatHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="MessageInput" type="TextEdit" parent="PrimaryContainer/MainContent/ChatView/VBoxContainer/InputChatHBox/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_gcbj6")
+placeholder_text = "Type a message"
+context_menu_enabled = false
+wrap_mode = 1
+scroll_smooth = true
+scroll_fit_content_height = true
+
 [node name="Profile" type="Node" parent="."]
 
-[node name="ToggleProfileView" type="Node" parent="Profile" node_paths=PackedStringArray("profile_button", "profile_view_container")]
+[node name="ToggleProfileView" type="Node" parent="Profile" node_paths=PackedStringArray("profile_button", "profile_view_container", "chat_view")]
 script = ExtResource("9_w0a1o")
 profile_button = NodePath("../../PrimaryContainer/SideBar/MarginContainer/VBoxContainer/UserProfileButton")
 profile_view_container = NodePath("../../PrimaryContainer/MainContent/ProfileView")
+chat_view = NodePath("../../PrimaryContainer/MainContent/ChatView")
 
 [node name="ProfileUpdater" type="Node" parent="Profile" node_paths=PackedStringArray("profile_view_username", "profile_view_user_id", "profile_view_image", "profile_view_about")]
 script = ExtResource("10_e3h42")
@@ -274,14 +362,39 @@ discovery_toggle = NodePath("../../PrimaryContainer/SideBar/MarginContainer/VBox
 
 [node name="Listen" type="Node" parent="."]
 
-[node name="UserLogin" type="Node" parent="Listen" node_paths=PackedStringArray("online_users_container")]
+[node name="ExternalUserVisibilityUpdate" type="Node" parent="Listen" node_paths=PackedStringArray("online_users_container", "chat_view", "send_message")]
 script = ExtResource("11_i4q3t")
 online_users_container = NodePath("../../PrimaryContainer/SideBar/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/OnlineUsersVBox")
+chat_view = NodePath("../../Chat/UpdateChatView")
+send_message = NodePath("../../Chat/SendMessage")
+
+[node name="ReceiveMessage" type="Node" parent="Listen"]
+script = ExtResource("12_aa2bv")
+
+[node name="Chat" type="Node" parent="."]
+
+[node name="UpdateChatView" type="Node" parent="Chat" node_paths=PackedStringArray("chat_username_label", "chat_user_id_label", "profile_view", "chat_view", "load_chat_messages")]
+script = ExtResource("12_4ev0o")
+chat_username_label = NodePath("../../PrimaryContainer/MainContent/ChatView/VBoxContainer/HeaderPanelContainer/MarginContainer/HBoxContainer/ChatUsernameLabel")
+chat_user_id_label = NodePath("../../PrimaryContainer/MainContent/ChatView/VBoxContainer/HeaderPanelContainer/MarginContainer/HBoxContainer/ChatUserIDLabel")
+profile_view = NodePath("../../PrimaryContainer/MainContent/ProfileView")
+chat_view = NodePath("../../PrimaryContainer/MainContent/ChatView")
+load_chat_messages = NodePath("../LoadChatMessages")
+
+[node name="LoadChatMessages" type="Node" parent="Chat" node_paths=PackedStringArray("chat_vbox")]
+script = ExtResource("13_gcbj6")
+chat_vbox = NodePath("../../PrimaryContainer/MainContent/ChatView/VBoxContainer/MainChatScroller/MarginContainer/ChatVBox")
+
+[node name="SendMessage" type="Node" parent="Chat" node_paths=PackedStringArray("message_input", "messages_vbox")]
+script = ExtResource("15_aa2bv")
+message_input = NodePath("../../PrimaryContainer/MainContent/ChatView/VBoxContainer/InputChatHBox/MarginContainer/MessageInput")
+messages_vbox = NodePath("../../PrimaryContainer/MainContent/ChatView/VBoxContainer/MainChatScroller/MarginContainer/ChatVBox")
 
 [connection signal="pressed" from="PrimaryContainer/SideBar/MarginContainer/VBoxContainer/DiscoveryToggle" to="Broadcast/ToggleVisibility" method="_on_discovery_toggle_pressed"]
 [connection signal="pressed" from="PrimaryContainer/SideBar/MarginContainer/VBoxContainer/UserProfileButton" to="Profile/ToggleProfileView" method="_on_profile_view_pressed"]
-[connection signal="pressed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop/UserIcon/UserIconButton" to="Profile/ProfileEditor" method="_on_user_icon_button_pressed"]
+[connection signal="color_changed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/UserProfileBG/UserPFPCrop/UserIcon/UserColorButton" to="Profile/ProfileEditor" method="_on_user_color_button_color_changed"]
 [connection signal="text_changed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/PeerInfoHBox/MarginContainer/VBoxContainer/UsernameEditContainer/UsernameEdit" to="Profile/ProfileEditor" method="_on_profile_changed"]
 [connection signal="text_changed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/AboutText" to="Profile/ProfileEditor" method="_on_profile_changed"]
 [connection signal="pressed" from="PrimaryContainer/MainContent/ProfileView/VBoxContainer/SaveChangesButton" to="Profile/ProfileEditor" method="_on_save_changes_button_pressed"]
 [connection signal="file_selected" from="PrimaryContainer/MainContent/ProfileView/UserPFPDialog" to="Profile/ProfileEditor" method="_on_user_pfp_dialog_file_selected"]
+[connection signal="gui_input" from="PrimaryContainer/MainContent/ChatView/VBoxContainer/InputChatHBox/MarginContainer/MessageInput" to="Chat/SendMessage" method="_on_message_input_gui_input"]

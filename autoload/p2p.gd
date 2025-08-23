@@ -9,10 +9,10 @@ signal logged_out
 signal user_logged_in(user_id: int)
 signal user_logged_out(user_id: int)
 signal user_profile_changed(user_id: int, user_data: User)
+signal user_visibility_changed(user_id: int, visibility: DataType)
+signal user_profile_fetched(user_id: int, user_data: User)
 signal incoming_friend_request(user_id: int)
 signal incoming_message(user_id: int, message: String)
-signal user_profile_fetched(user_id: int, user_data: User)
-
 
 enum DataType {
 	ONLINE,
@@ -31,13 +31,13 @@ const OFFLINE: DataType = DataType.OFFLINE
 const MESSAGE: DataType = DataType.MESSAGE
 const FRIEND_ADD: DataType = DataType.FRIEND_ADD
 const PROFILE_CHANGED: DataType = DataType.PROFILE_CHANGED
-const VISIBILITY_FRIENDS: DataType = DataType.VISIBILITY_FRIENDS
-const VISIBILITY_OPEN: DataType = DataType.VISIBILITY_OPEN
 const PROFILE_GET: DataType = DataType.PROFILE_GET
 const PROFILE_SEND: DataType = DataType.PROFILE_SEND
+const VISIBILITY_FRIENDS: DataType = DataType.VISIBILITY_FRIENDS
+const VISIBILITY_OPEN: DataType = DataType.VISIBILITY_OPEN
 
 var visibility: int
-var user_list: Dictionary[int, User]
+var user_cache: Dictionary[int, User]
 
 func _ready() -> void:
 	if OS.get_name() != "macOS":
@@ -60,7 +60,7 @@ func _process(_delta: float) -> void:
 		raw_packet_received.emit(raw_packet)
 		if raw_packet.size() >= 4:
 			var data = bytes_to_var_with_objects(raw_packet)
-			if data and data is Dictionary:
+			if data and data is Dictionary and UserData.user:
 				#if data.get(&"from") != UserData.user.user_id:
 				packet_received.emit(data)
 
@@ -72,7 +72,7 @@ func _check_packet(data: Dictionary) -> void:
 		OFFLINE:
 			user_logged_out.emit(user_id)
 		MESSAGE:
-			incoming_message.emit(user_id, data.get(&"message"))
+			incoming_message.emit(user_id, data.get(&"content"))
 		FRIEND_ADD:
 			incoming_friend_request.emit(user_id)
 		PROFILE_CHANGED:
@@ -81,6 +81,10 @@ func _check_packet(data: Dictionary) -> void:
 			_on_profile_get(user_id)
 		PROFILE_SEND:
 			user_profile_fetched.emit(user_id, data)
+		VISIBILITY_OPEN:
+			user_visibility_changed.emit(user_id, VISIBILITY_OPEN)
+		VISIBILITY_FRIENDS:
+			user_visibility_changed.emit(user_id, VISIBILITY_FRIENDS)
 
 func _on_profile_get(from_user: int) -> void:
 	if visibility == VISIBILITY_OPEN or (visibility == VISIBILITY_FRIENDS and from_user in UserData.user.friends_list):
@@ -90,9 +94,8 @@ func _on_profile_get(from_user: int) -> void:
 		}
 		broadcast(PROFILE_SEND, var_to_bytes_with_objects(data))
 
+func fetch_user(user_id: int) -> User:
+	return user_cache.get(user_id, User.new())
+
 func _exit_tree() -> void:
-	var data: Dictionary = {
-		&"from": UserData.user.user_id,
-		&"type": DataType.OFFLINE,
-	}
-	Network.broadcast_local(var_to_bytes_with_objects(data))
+	broadcast(OFFLINE)

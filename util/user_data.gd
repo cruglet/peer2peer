@@ -19,7 +19,6 @@ static func fetch() -> User:
 		user.username = fetched_user.username
 		user.user_id = fetched_user.user_id
 		user.friends_list = fetched_user.friends_list
-		user.profile_picture_data = fetched_user.profile_picture_data
 		user.modulate_pfp = fetched_user.modulate_pfp
 		user.about = fetched_user.about
 		P2P.logged_in.emit()
@@ -34,22 +33,54 @@ static func store() -> void:
 	var user_file: FileAccess = FileAccess.open(config_path.path_join("user"), FileAccess.WRITE)
 	user_file.store_var(user, true)
 
-static func fetch_profile_picture(data: PackedByteArray = []) -> Texture2D:
-	var new_img: Image = Image.new()
-	var buf: PackedByteArray
+static func fetch_profile_picture(data: PackedByteArray = []) -> ImageTexture:
+	if !data:
+		return load("res://meta/icons/default_user_icon.svg") 
 	
-	if data:
-		buf = data
-	else:
-		buf = user.profile_picture_data
-	
-	if new_img.load_png_from_buffer(buf) == OK:
-		pass
-	elif new_img.load_jpg_from_buffer(buf) == OK:
-		pass
-	elif new_img.load_svg_from_buffer(buf) == OK:
-		pass
-	else:
-		return load("res://meta/icons/default_user_icon.svg")
-	
-	return ImageTexture.create_from_image(new_img) 
+	var image: Image = Image.new()
+	var err: Error = image.load_png_from_buffer(data)
+	if err != OK:
+		err = image.load_jpg_from_buffer(data)
+		if err != OK:
+			err = image.load_svg_from_buffer(data)
+			if err != OK:
+				return load("res://meta/icons/default_user_icon.svg")
+				
+	return ImageTexture.create_from_image(image)
+
+
+static func fetch_messages(conversation_id: int) -> Array[Dictionary]:
+	var path: String = config_path.path_join(str(conversation_id))
+	if not FileAccess.file_exists(path):
+		return []
+
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var data: Variant = file.get_var(true)
+	file.close()
+
+	if data is Array:
+		return data
+	return []
+
+
+static func store_message(conversation_id: int, message: String, author_id: int) -> void:
+	var path: String = config_path.path_join(str(conversation_id))
+	var messages: Array[Dictionary] = []
+
+	if FileAccess.file_exists(path):
+		var read_file: FileAccess = FileAccess.open(path, FileAccess.READ)
+		var past_messages: Variant = read_file.get_var(true)
+		if past_messages is Array:
+			messages = past_messages
+		read_file.close()
+
+	var new_message: Dictionary = {
+		"message": message,
+		"author": author_id,
+		"time": Time.get_time_string_from_system()
+	}
+	messages.append(new_message)
+
+	var write_file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	write_file.store_var(messages)
+	write_file.close()
