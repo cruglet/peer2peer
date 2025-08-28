@@ -29,7 +29,7 @@ func _on_user_pfp_dialog_file_selected(path: String) -> void:
 func _on_create_profile_button_pressed() -> void:
 	var new_user: User = User.new()
 	new_user.username = username_edit.text
-	new_user.profile_picture_data = FileAccess.get_file_as_bytes(pfp_path)
+	#new_user.profile_picture_data = FileAccess.get_file_as_bytes(pfp_path)
 	new_user.user_id = int(user_id.text.replace('#', ''))
 	new_user.modulate_pfp = user_icon.self_modulate
 	new_user.about = about_edit.text

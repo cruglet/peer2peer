@@ -4,6 +4,8 @@ static var user: User
 
 static var config_path: String:
 	get():
+		if Debug.SANDBOX:
+			return OS.get_data_dir().path_join("p2p").path_join("sandbox_%s" % P2P.seed)
 		return OS.get_data_dir().path_join("p2p")
 	
 static func fetch() -> User:
@@ -63,7 +65,7 @@ static func fetch_messages(conversation_id: int) -> Array[Dictionary]:
 	return []
 
 
-static func store_message(conversation_id: int, message: String, author_id: int) -> void:
+static func store_message(conversation_id: int, encrypted_message: PackedByteArray, author_id: int) -> void:
 	var path: String = config_path.path_join(str(conversation_id))
 	var messages: Array[Dictionary] = []
 
@@ -75,9 +77,9 @@ static func store_message(conversation_id: int, message: String, author_id: int)
 		read_file.close()
 
 	var new_message: Dictionary = {
-		"message": message,
+		"message": encrypted_message,
 		"author": author_id,
-		"time": Time.get_time_string_from_system()
+		"time": Time.get_unix_time_from_system()
 	}
 	messages.append(new_message)
 

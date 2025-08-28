@@ -33,10 +33,9 @@ primary_container = NodePath("PrimaryMessage")
 sequential_container = NodePath("SequentialMessage")
 
 [node name="PrimaryMessage" type="HBoxContainer" parent="."]
-visible = false
 custom_minimum_size = Vector2(0, 90)
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = -1
 anchor_right = 1.0
 offset_bottom = 80.0
 grow_horizontal = 2
@@ -86,9 +85,10 @@ theme_override_font_sizes/font_size = 28
 text = "message"
 
 [node name="SequentialMessage" type="HBoxContainer" parent="."]
+visible = false
 custom_minimum_size = Vector2(0, 35)
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = -1
 anchor_right = 1.0
 offset_bottom = 63.0
 grow_horizontal = 2

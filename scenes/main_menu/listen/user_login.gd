@@ -13,6 +13,7 @@ func _ready() -> void:
 
 
 func check_user(user_id: int, user_visibility: P2P.DataType) -> void:
+	print(user_id)
 	var is_friend: bool = user_id in UserData.user.friends_list
 	match P2P.visibility:
 		P2P.VISIBILITY_FRIENDS:
@@ -32,6 +33,9 @@ func add_user_to_list(user_id: int, content: Dictionary) -> void:
 		return
 	
 	var user: User = data.get(&"profile")
+	
+	if user.user_id == UserData.user.user_id:
+		return
 	
 	var user_button: SidebarButton = USER_BUTTON.duplicate(true).instantiate()
 	P2P.user_cache.set(user_id, user)

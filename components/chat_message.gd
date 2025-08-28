@@ -2,8 +2,8 @@ extends Control
 @export_group("Variables")
 @export var author_id: int
 @export var author_name: String
-@export var message_time: String
-@export var message: String
+@export var message_time: float
+@export var message_data: PackedByteArray
 @export var sequential: bool
 @export var author_color: Color = Color.WHITE
 
@@ -29,11 +29,15 @@ func _ready() -> void:
 		primary_container.hide()
 		sequential_container.show()
 		custom_minimum_size.y = sequential_container.custom_minimum_size.y
+	else:
+		primary_container.show()
+		sequential_container.hide()
+		custom_minimum_size.y = primary_container.custom_minimum_size.y
 	
 	user_icon.self_modulate = author_color
 	username_label.text = author_name
-	message_label.text = message
-	sequential_message_label.text = message
+	message_label.text = Encrypt.decode_string(message_data)
+	sequential_message_label.text = Encrypt.decode_string(message_data)
 	
-	time_label.text = message_time
-	sequential_time_label.text = message_time
+	time_label.text = Time.get_datetime_string_from_unix_time(int(message_time)).replace("T", " * ")
+	sequential_time_label.text = Time.get_time_string_from_unix_time(int(message_time))

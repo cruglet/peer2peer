@@ -20,8 +20,14 @@ static func get_v4_addresses() -> PackedStringArray:
 	return addresses
 
 static func broadcast_local(data: PackedByteArray, ip: String = "") -> void:
+	if peer.get_local_port() == 0 or not peer.is_bound():
+		peer = PacketPeerUDP.new()
+		peer.bind(Network.port)
 	peer.set_broadcast_enabled(true)
-	if ip:
+	if Debug.FULL_BROADCAST:
+		peer.set_dest_address("255.255.255.255", port)
+		peer.put_packet(data)
+	elif ip:
 		peer.set_dest_address(ip, port)
 		peer.put_packet(data)
 	else:

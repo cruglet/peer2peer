@@ -12,7 +12,7 @@ signal user_profile_changed(user_id: int, user_data: User)
 signal user_visibility_changed(user_id: int, visibility: DataType)
 signal user_profile_fetched(user_id: int, user_data: User)
 signal incoming_friend_request(user_id: int)
-signal incoming_message(user_id: int, message: String)
+signal incoming_message(user_id: int, message_data: PackedByteArray)
 
 enum DataType {
 	ONLINE,
@@ -38,8 +38,11 @@ const VISIBILITY_OPEN: DataType = DataType.VISIBILITY_OPEN
 
 var visibility: int
 var user_cache: Dictionary[int, User]
+var seed: int
+
 
 func _ready() -> void:
+	seed = randi_range(0, 999999)
 	if OS.get_name() != "macOS":
 		AirplayCheck.queue_free()
 	packet_received.connect(_check_packet)
@@ -99,3 +102,5 @@ func fetch_user(user_id: int) -> User:
 
 func _exit_tree() -> void:
 	broadcast(OFFLINE)
+	if Debug.SANDBOX:
+		DirAccess.remove_absolute(UserData.config_path)
