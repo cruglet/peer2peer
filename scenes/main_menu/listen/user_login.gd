@@ -7,6 +7,11 @@ extends Node
 const USER_BUTTON = preload("res://components/sidebar_button.tscn")
 
 
+var loaded_users: Dictionary[int, User] = {
+	
+}
+
+
 func _ready() -> void:
 	P2P.user_visibility_changed.connect(check_user)
 	P2P.user_profile_fetched.connect(add_user_to_list)
@@ -27,6 +32,9 @@ func check_user(user_id: int, user_visibility: P2P.DataType) -> void:
 
 
 func add_user_to_list(user_id: int, content: Dictionary) -> void:
+	if user_id in loaded_users:
+		return
+	
 	var data: Dictionary = bytes_to_var_with_objects(content.get(&"content"))
 	
 	if data.get(&"to") != UserData.user.user_id:
@@ -48,6 +56,8 @@ func add_user_to_list(user_id: int, content: Dictionary) -> void:
 	user_button.set_meta(&"user", user)
 	user_button.pressed.connect(chat_view.show_messages)
 	user_button.pressed.connect(send_message._assign_user)
+	
+	loaded_users.set(user_id, user)
 	
 	P2P.user_cache.set(user_id, user)
 	online_users_container.add_child(user_button)
