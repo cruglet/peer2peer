@@ -23,25 +23,34 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_j21d3")
-username_label = NodePath("PrimaryMessage/VBoxContainer/HBoxContainer/UsernameLabel")
-message_label = NodePath("PrimaryMessage/VBoxContainer/MessageLabel")
-time_label = NodePath("PrimaryMessage/VBoxContainer/HBoxContainer/TimeLabel")
-user_icon = NodePath("PrimaryMessage/UserPFPCrop/UserIcon")
+username_label = NodePath("PrimaryMessage/PrimaryMessage/VBoxContainer/HBoxContainer/UsernameLabel")
+message_label = NodePath("PrimaryMessage/PrimaryMessage/VBoxContainer/MessageLabel")
+time_label = NodePath("PrimaryMessage/PrimaryMessage/VBoxContainer/HBoxContainer/TimeLabel")
+user_icon = NodePath("PrimaryMessage/PrimaryMessage/UserPFPCrop/UserIcon")
 sequential_message_label = NodePath("SequentialMessage/MessageLabel")
 sequential_time_label = NodePath("SequentialMessage/TimeLabel")
 primary_container = NodePath("PrimaryMessage")
 sequential_container = NodePath("SequentialMessage")
 
-[node name="PrimaryMessage" type="HBoxContainer" parent="."]
-custom_minimum_size = Vector2(0, 90)
+[node name="PrimaryMessage" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 140)
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-offset_bottom = 80.0
+offset_bottom = 110.0
 grow_horizontal = 2
+
+[node name="Control" type="Control" parent="PrimaryMessage"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PrimaryMessage" type="HBoxContainer" parent="PrimaryMessage"]
+custom_minimum_size = Vector2(0, 110)
+layout_mode = 2
+size_flags_vertical = 0
 theme_override_constants/separation = 10
 
-[node name="UserPFPCrop" type="PanelContainer" parent="PrimaryMessage"]
+[node name="UserPFPCrop" type="PanelContainer" parent="PrimaryMessage/PrimaryMessage"]
 clip_children = 1
 custom_minimum_size = Vector2(120, 82)
 layout_mode = 2
@@ -50,26 +59,26 @@ size_flags_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_u7dub")
 
-[node name="UserIcon" type="TextureRect" parent="PrimaryMessage/UserPFPCrop"]
+[node name="UserIcon" type="TextureRect" parent="PrimaryMessage/PrimaryMessage/UserPFPCrop"]
 layout_mode = 2
 texture = ExtResource("2_rcdwj")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PrimaryMessage"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PrimaryMessage/PrimaryMessage"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PrimaryMessage/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PrimaryMessage/PrimaryMessage/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="UsernameLabel" type="Label" parent="PrimaryMessage/VBoxContainer/HBoxContainer"]
+[node name="UsernameLabel" type="Label" parent="PrimaryMessage/PrimaryMessage/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("1_wq60c")
 theme_override_font_sizes/font_size = 40
 text = "user"
 
-[node name="TimeLabel" type="Label" parent="PrimaryMessage/VBoxContainer/HBoxContainer"]
+[node name="TimeLabel" type="Label" parent="PrimaryMessage/PrimaryMessage/VBoxContainer/HBoxContainer"]
 self_modulate = Color(1, 1, 1, 0.392157)
 layout_mode = 2
 size_flags_vertical = 1
@@ -78,7 +87,7 @@ theme_override_font_sizes/font_size = 24
 text = "01:04"
 vertical_alignment = 1
 
-[node name="MessageLabel" type="Label" parent="PrimaryMessage/VBoxContainer"]
+[node name="MessageLabel" type="Label" parent="PrimaryMessage/PrimaryMessage/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("1_wq60c")
 theme_override_font_sizes/font_size = 28
