@@ -368,8 +368,9 @@ online_users_container = NodePath("../../PrimaryContainer/SideBar/MarginContaine
 chat_view = NodePath("../../Chat/UpdateChatView")
 send_message = NodePath("../../Chat/SendMessage")
 
-[node name="ReceiveMessage" type="Node" parent="Listen"]
+[node name="ReceiveMessage" type="Node" parent="Listen" node_paths=PackedStringArray("main_chat_scroller")]
 script = ExtResource("12_aa2bv")
+main_chat_scroller = NodePath("../../PrimaryContainer/MainContent/ChatView/VBoxContainer/MainChatScroller")
 
 [node name="Chat" type="Node" parent="."]
 
