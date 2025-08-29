@@ -33,6 +33,9 @@ func add_message(user_id: int, message: String):
 	var msg = CHAT_MESSAGE.duplicate(true).instantiate()
 	var user: User = P2P.fetch_user(user_id)
 	
+	if user_id == UserData.user.user_id:
+		user = UserData.user
+	
 	msg.author_name = user.username
 	msg.author_id = user.user_id
 	msg.author_color = user.modulate_pfp
